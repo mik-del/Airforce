@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Air Force – Official Website (Demo)</title>
+  <meta name="description" content="A modern, responsive Air Force website built with HTML, CSS, and vanilla JavaScript." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b1220;
+      --bg-2: #0e1628;
+      --card: #101a30;
+      --text: #e6eefc;
+      --muted: #b8c4dd;
+      --primary: #4ca3ff;
+      --primary-2: #80c2ff;
+      --accent: #00e0ff;
+      --warn: #ffc857;
+      --error: #ff6b6b;
+      --success: #27d38c;
+      --shadow: 0 10px 30px rgba(0,0,0,0.35);
+      --radius: 18px;
+      --radius-sm: 12px;
+      --radius-lg: 26px;
+      --border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    /* Reset & base */
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color: var(--text); background: radial-gradient(1200px 800px at 70% -10%, #173159 0%, transparent 60%),
+      radial-gradient(900px 600px at -10% 30%, #11203f 0%, transparent 60%), var(--bg);
+      line-height: 1.6; overflow-x: hidden;
+    }
+    a { color: inherit; text-decoration: none; }
+    img { max-width: 100%; display: block; }
+    .container { width: min(1200px, 92%); margin: 0 auto; }
+    .chips { display: inline-flex; gap: .5rem; flex-wrap: wrap; }
+    .chip { padding: .4rem .7rem; background: rgba(255,255,255,0.06); border: var(--border); border-radius: 999px; font-size: .8rem; color: var(--muted); }
+
+    /* Header */
+    header.site-header { position: sticky; top: 0; z-index: 50; backdrop-filter: blur(10px); background: linear-gradient(180deg, rgba(11,18,32,0.9), rgba(11,18,32,0.6)); border-bottom: var(--border); }
+    .nav { display: flex; align-items: center; justify-content: space-between; padding: .75rem 0; gap: 1rem; }
+    .brand { display: flex; align-items: center; gap: .6rem; font-weight: 800; letter-spacing: .2px; }
+    .brand-logo { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; background: linear-gradient(135deg, var(--primary), var(--accent)); box-shadow: var(--shadow); }
+    .brand span { font-size: 1.05rem; }
+
+    .nav-links { display: flex; align-items: center; gap: 1rem; }
+    .nav-links a { padding: .55rem .8rem; border-radius: 10px; color: var(--muted); border: 1px solid transparent; }
+    .nav-links a:hover, .nav-links a.active { color: var(--text); border-color: rgba(255,255,255,0.08); background: rgba(255,255,255,0.06); }
+
+    .cta { display: inline-flex; align-items: center; gap: .6rem; padding: .6rem .95rem; border-radius: 999px; background: linear-gradient(135deg, var(--primary), var(--accent)); color: #001225; font-weight: 700; border: none; box-shadow: var(--shadow); cursor: pointer; }
+    .cta:active { transform: translateY(1px); }
+
+    .menu-btn { display: none; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.04); color: var(--text); border-radius: 10px; padding: .5rem .7rem; }
+
+    /* Hero */
+    .hero { position: relative; isolation: isolate; padding: 64px 0 40px; }
+    .hero-grid { display: grid; grid-template-columns: 1.2fr .8fr; gap: 40px; align-items: center; }
+    .kicker { color: var(--primary-2); font-weight: 700; font-size: .95rem; letter-spacing: .08em; text-transform: uppercase; }
+    .title { font-size: clamp(1.9rem, 4.6vw, 3.2rem); line-height: 1.1; margin: .4rem 0 .75rem; font-weight: 900; }
+    .subtitle { color: var(--muted); font-size: 1.05rem; }
+    .hero-card { background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02)); border: var(--border); border-radius: var(--radius-lg); padding: 1rem; box-shadow: var(--shadow); }
+
+    .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 24px; }
+    .stat { background: var(--card); border: var(--border); border-radius: var(--radius); padding: 16px; text-align: center; }
+    .stat .num { font-weight: 900; font-size: 1.6rem; letter-spacing: .5px; }
+    .stat .label { color: var(--muted); font-size: .85rem; }
+
+    .hero-visual { position: relative; }
+    .plane { border-radius: var(--radius-lg); overflow: hidden; border: var(--border); box-shadow: var(--shadow); }
+    .plane img { aspect-ratio: 16/10; object-fit: cover; }
+    .badges { position: absolute; inset: auto 10px -18px auto; display: flex; gap: 10px; }
+    .badge { padding: .5rem .7rem; background: #071325; border: var(--border); color: var(--primary-2); border-radius: 10px; font-weight: 700; }
+
+    /* Sections */
+    section { padding: 72px 0; }
+    .section-head { display: flex; align-items: end; justify-content: space-between; gap: 1rem; margin-bottom: 24px; }
+    .section-head h2 { margin: 0; font-size: clamp(1.3rem, 3vw, 2rem); }
+    .grid { display: grid; gap: 18px; }
+
+    /* Capabilities */
+    .card { background: var(--card); border: var(--border); border-radius: var(--radius); padding: 18px; box-shadow: var(--shadow); }
+    .card h3 { margin: 0 0 .25rem; }
+    .card p { color: var(--muted); margin: 0; }
+    .icon { width: 36px; height: 36px; border-radius: 10px; display: grid; place-items: center; background: rgba(255,255,255,0.06); border: var(--border); margin-bottom: .75rem; }
+
+    /* Fleet */
+    .fleet { grid-template-columns: repeat(3, 1fr); }
+    .fleet-item { display: grid; grid-template-rows: auto 1fr auto; gap: .5rem; }
+    .tag { display: inline-block; padding: .25rem .55rem; background: rgba(255,255,255,0.06); border: var(--border); border-radius: 999px; font-size: .75rem; color: var(--muted); }
+    .thumb { border-radius: 14px; overflow: hidden; border: var(--border); }
+    .thumb img { aspect-ratio: 4/3; object-fit: cover; }
+
+    /* Timeline */
+    .timeline { position: relative; }
+    .timeline::before { content: ""; position: absolute; left: 10px; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, rgba(255,255,255,0.2), rgba(255,255,255,0)); }
+    .event { position: relative; padding-left: 34px; margin-bottom: 18px; }
+    .dot { position: absolute; left: 4px; top: 8px; width: 12px; height: 12px; border-radius: 50%; background: var(--primary); box-shadow: 0 0 0 3px rgba(76,163,255,0.2); }
+    .event time { color: var(--muted); font-size: .85rem; }
+
+    /* Careers */
+    .jobs { grid-template-columns: repeat(3, 1fr); }
+    .job { display: grid; gap: .25rem; }
+    .job strong { font-size: 1.05rem; }
+    .job .meta { color: var(--muted); font-size: .9rem; display: flex; gap: .6rem; flex-wrap: wrap; }
+
+    /* News */
+    .news { grid-template-columns: repeat(3, 1fr); }
+    .news-item { display: grid; gap: .6rem; }
+    .news-item .thumb img { aspect-ratio: 16/9; }
+
+    /* Gallery */
+    .gallery { grid-template-columns: repeat(4, 1fr); }
+    .gallery .thumb img { aspect-ratio: 1/1; cursor: pointer; }
+
+    /* FAQ */
+    .accordion .item { border: var(--border); border-radius: var(--radius); background: var(--card); }
+    .accordion button { all: unset; display: flex; justify-content: space-between; align-items: center; gap: 12px; width: 100%; padding: 16px; cursor: pointer; }
+    .accordion .content { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .25s ease; }
+    .accordion .content > div { overflow: hidden; }
+    .accordion .item.open .content { grid-template-rows: 1fr; }
+    .accordion .item.open .chev { transform: rotate(180deg); }
+
+    /* Contact */
+    form { display: grid; gap: .9rem; }
+    .field { display: grid; gap: .4rem; }
+    .field input, .field textarea, .field select { background: #0d1527; color: var(--text); border: var(--border); border-radius: 12px; padding: .8rem .9rem; font: inherit; }
+    .field textarea { min-height: 120px; resize: vertical; }
+    .help { color: var(--muted); font-size: .85rem; }
+    .banner { padding: .8rem 1rem; border-radius: 12px; font-weight: 600; }
+    .banner.success { background: rgba(39,211,140,0.15); border: 1px solid rgba(39,211,140,0.4); color: #b7f7dc; }
+    .banner.error { background: rgba(255,107,107,0.15); border: 1px solid rgba(255,107,107,0.35); color: #ffd1d1; }
+
+    /* Footer */
+    footer { border-top: var(--border); background: rgba(255,255,255,0.03); padding: 36px 0; }
+    .footer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: center; }
+    .socials { display: flex; gap: 10px; }
+    .socials a { width: 36px; height: 36px; display: grid; place-items: center; background: rgba(255,255,255,0.06); border-radius: 10px; border: var(--border); }
+
+    /* Utilities */
+    .row { display: grid; grid-template-columns: 1.1fr .9fr; gap: 18px; }
+    .row-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .row-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+    .center { text-align: center; }
+    .muted { color: var(--muted); }
+    .spacer { height: 40px; }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .hero-grid, .row { grid-template-columns: 1fr; }
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .fleet, .jobs, .news, .gallery { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 720px) {
+      .menu-btn { display: inline-flex; }
+      .nav-links { position: fixed; inset: 60px 12px auto 12px; background: #0c1529; border: var(--border); border-radius: 14px; padding: 10px; box-shadow: var(--shadow); display: none; flex-direction: column; }
+      .nav-links.open { display: flex; }
+      .stats { grid-template-columns: 1fr 1fr; }
+      .fleet, .jobs, .news, .gallery, .row-3, .row-2 { grid-template-columns: 1fr; }
+      .footer-grid { grid-template-columns: 1fr; }
+      .badges { position: static; margin-top: 10px; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip-link" href="#main" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;">Skip to content</a>
+
+  <!-- Header -->
+  <header class="site-header" role="banner">
+    <div class="container nav">
+      <div class="brand">
+        <div class="brand-logo" aria-hidden="true">
+          <!-- Simple jet icon -->
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M2 12h8l3-9 2 9h7l-7 2-2 8-3-8H2z" fill="white" opacity=".9"/>
+          </svg>
+        </div>
+        <span>NIGERIA AIRFORCE BASE BY MICHEAL</span>
+      </div>
+
+      <nav aria-label="Primary">
+        <button class="menu-btn" id="menuBtn" aria-expanded="false" aria-controls="navLinks">Menu</button>
+        <div class="nav-links" id="navLinks">
+          <a href="#home" class="active">Home</a>
+          <a href="#capabilities">Capabilities</a>
+          <a href="#fleet">Fleet</a>
+          <a href="#careers">Careers</a>
+          <a href="#news">News</a>
+          <a href="#gallery">Gallery</a>
+          <a href="#faq">FAQ</a>
+          <a href="#contact">Contact</a>
+          <a href="#recruit" class="cta" style="margin-left:auto">Apply Now</a>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <!-- Hero -->
+    <section id="home" class="hero" aria-label="Hero">
+      <div class="container hero-grid">
+        <div>
+          <div class="kicker">Integrity • Service • Excellence</div>
+          <h1 class="title">Guardians of the Sky</h1>
+          <p class="subtitle">This demo site showcases a complete, modern frontend for an Air Force organization. Replace sample content, images, and text with your official materials.</p>
+          <div class="spacer"></div>
+          <div class="chips" aria-label="Quick highlights">
+            <span class="chip">Air Superiority</span>
+            <span class="chip">ISR & Cyber</span>
+            <span class="chip">Joint Operations</span>
+            <span class="chip">Humanitarian Aid</span>
+          </div>
+          <div class="stats" aria-label="Key metrics">
+            <div class="stat">
+              <div class="num" data-count="120+">0</div>
+              <div class="label">Active Aircraft</div>
+            </div>
+            <div class="stat">
+              <div class="num" data-count="35">0</div>
+              <div class="label">Bases</div>
+            </div>
+            <div class="stat">
+              <div class="num" data-count="18k+">0</div>
+              <div class="label">Personnel</div>
+            </div>
+            <div class="stat">
+              <div class="num" data-count="24/7">0</div>
+              <div class="label">Readiness</div>
+            </div>
+          </div>
+        </div>
+        <div class="hero-visual">
+          <div class="hero-card plane">
+            <img src="https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?q=80&w=1600&auto=format&fit=crop" alt="Fighter jet flying above clouds" />
+          </div>
+          <div class="badges" aria-hidden="true">
+            <span class="badge">Operational</span>
+            <span class="badge">Global Reach</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Capabilities -->
+    <section id="capabilities" aria-labelledby="capabilities-title">
+      <div class="container">
+        <div class="section-head">
+          <h2 id="capabilities-title">Core Capabilities</h2>
+          <div class="chips">
+            <span class="chip">Air • Space • Cyber</span>
+            <span class="chip">All‑Domain</span>
+          </div>
+        </div>
+        <div class="grid row-3">
+          <article class="card">
+            <div class="icon" aria-hidden="true">✈️</div>
+            <h3>Air Superiority</h3>
+            <p>Maintain control of the skies through deterrence, strategic presence, and precision engagement.</p>
+          </article>
+          <article class="card">
+            <div class="icon" aria-hidden="true">🛰️</div>
+            <h3>ISR & Space</h3>
+            <p>Intelligence, Surveillance & Reconnaissance with integrated space‑based support for decision advantage.</p>
+          </article>
+          <article class="card">
+            <div class="icon" aria-hidden="true">🛡️</div>
+            <h3>Air & Missile Defense</h3>
+            <p>Layered defense architecture protecting people, assets, and national interests.</p>
+          </article>
+          <article class="card">
+            <div class="icon" aria-hidden="true">🚁</div>
+            <h3>Mobility & Lift</h3>
+            <p>Strategic and tactical airlift to project power, deliver aid, and support joint operations worldwide.</p>
+          </article>
+          <article class="card">
+            <div class="icon" aria-hidden="true">💻</div>
+            <h3>Cyber Defense</h3>
+            <p>Protect critical networks and conduct defensive cyber operations in contested environments.</p>
+          </article>
+          <article class="card">
+            <div class="icon" aria-hidden="true">🤝</div>
+            <h3>Partnerships</h3>
+            <p>Interoperability with allies and partners for stability, security, and shared prosperity.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Fleet -->
+    <section id="fleet" aria-labelledby="fleet-title">
+      <div class="container">
+        <div class="section-head">
+          <h2 id="fleet-title">Fleet Overview</h2>
+          <p class="muted">Representative aircraft. Replace with your service’s real inventory.</p>
+        </div>
+        <div class="grid fleet">
+          <article class="card fleet-item">
+            <div class="thumb"><img src="https://images.unsplash.com/photo-1506802913710-40e2e66339c1?q=80&w=1200&auto=format&fit=crop" alt="Multirole fighter" /></div>
+            <div>
+              <h3>Falcon X</h3>
+              <p class="muted">Multirole fighter • Supersonic • AESA radar • Precision strike.</p>
+            </div>
+            <div class="tag">Fighter</div>
+          </article>
+          <article class="card fleet-item">
+            <div class="thumb"><img src="https://images.unsplash.com/photo-1496905583330-eb54c7e59158?q=80&w=1200&auto=format&fit=crop" alt="Strategic airlifter" /></div>
+            <div>
+              <h3>Titan C</h3>
+              <p class="muted">Strategic airlift • Long‑range • Heavy payload • Humanitarian missions.</p>
+            </div>
+            <div class="tag">Airlift</div>
+          </article>
+          <article class="card fleet-item">
+            <div class="thumb"><img src="https://images.unsplash.com/photo-1519681393784-d120267933ba?q=80&w=1200&auto=format&fit=crop" alt="ISR aircraft" /></div>
+            <div>
+              <h3>Sentinel R</h3>
+              <p class="muted">ISR platform • Signals & imagery • Real‑time intelligence fusion.</p>
+            </div>
+            <div class="tag">ISR</div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Careers / Recruit -->
+    <section id="careers" aria-labelledby="careers-title">
+      <div class="container">
+        <div class="section-head">
+          <h2 id="careers-title">Careers & Recruitment</h2>
+          <a id="recruit" class="cta" href="#contact">Start Application</a>
+        </div>
+        <div class="grid jobs">
+          <article class="card job">
+            <strong>Pilot (Fixed‑Wing)</strong>
+            <div class="meta"><span>Location: Nationwide</span>•<span>Contract: Full‑Time</span></div>
+            <p class="muted">Lead tactical missions, train regularly, and uphold flight safety standards.</p>
+          </article>
+          <article class="card job">
+            <strong>Avionics Engineer</strong>
+            <div class="meta"><span>Location: HQ / Bases</span>•<span>Contract: Full‑Time</span></div>
+            <p class="muted">Integrate and maintain advanced sensors, radar, and communications systems.</p>
+          </article>
+          <article class="card job">
+            <strong>Cyber Defense Analyst</strong>
+            <div class="meta"><span>Location: Cyber Command</span>•<span>Contract: Full‑Time</span></div>
+            <p class="muted">Detect, defend, and respond to threats across critical networks.</p>
+          </article>
+        </div>
+        <div class="spacer"></div>
+        <div class="row">
+          <div class="card">
+            <h3>Training Pipeline</h3>
+            <div class="timeline" role="list">
+              <div class="event" role="listitem">
+                <div class="dot" aria-hidden="true"></div>
+                <strong>1. Selection</strong>
+                <div class="muted">Aptitude, physical fitness, and background screening.</div>
+              </div>
+              <div class="event" role="listitem">
+                <div class="dot" aria-hidden="true"></div>
+                <strong>2. Foundation</strong>
+                <div class="muted">Military fundamentals, leadership, and core values.</div>
+              </div>
+              <div class="event" role="listitem">
+                <div class="dot" aria-hidden="true"></div>
+                <strong>3. Specialty School</strong>
+                <div class="muted">Pilot, engineering, intelligence, cyber, logistics, or medical.</div>
+              </div>
+              <div class="event" role="listitem">
+                <div class="dot" aria-hidden="true"></div>
+                <strong>4. Operational Unit</strong>
+                <div class="muted">Mission readiness with ongoing training and evaluations.</div>
+              </div>
+            </div>
+          </div>
+          <aside class="card">
+            <h3>Eligibility</h3>
+            <ul class="muted">
+              <li>Citizenship & background requirements</li>
+              <li>Medical & fitness standards</li>
+              <li>Education & aptitude qualifications</li>
+              <li>Commitment to Air Force values</li>
+            </ul>
+            <p class="help">This is a demo. Customize with official recruitment guidance and legal notices.</p>
+          </aside>
+        </div>
+      </div>
+    </section>
+
+    <!-- News -->
+    <section id="news" aria-labelledby="news-title">
+      <div class="container">
+        <div class="section-head">
+          <h2 id="news-title">Latest News & Events</h2>
+          <p class="muted">Static examples — connect to a CMS or API for live updates.</p>
+        </div>
+        <div class="grid news">
+          <article class="card news-item">
+            <div class="thumb"><img src="https://images.unsplash.com/photo-1531436107035-90a7e87975a6?q=80&w=1200&auto=format&fit=crop" alt="Ceremony with aircraft" /></div>
+            <h3>Joint Exercise "Sky Shield" Concludes</h3>
+            <p class="muted">Air and ground units completed a two‑week multinational readiness exercise.</p>
+            <span class="tag">Press Release</span>
+          </article>
+          <article class="card news-item">
+            <div class="thumb"><img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=1200&auto=format&fit=crop" alt="Cargo aircraft delivering aid" /></div>
+            <h3>Humanitarian Airlift Delivers Essential Aid</h3>
+            <p class="muted">Strategic airlift transported medical supplies and food to remote communities.</p>
+            <span class="tag">Operations</span>
+          </article>
+          <article class="card news-item">
+            <div class="thumb"><img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?q=80&w=1200&auto=format&fit=crop" alt="Cyber operations center" /></div>
+            <h3>Cyber Defense Center Achieves Accreditation</h3>
+            <p class="muted">The new facility enhances detection and response to emerging cyber threats.</p>
+            <span class="tag">Technology</span>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- Gallery -->
+    <section id="gallery" aria-labelledby="gallery-title">
+      <div class="container">
+        <div class="section-head">
+          <h2 id="gallery-title">Photo Gallery</h2>
+          <p class="muted">Click an image to enlarge.</p>
+        </div>
+        <div class="grid gallery">
+          <div class="thumb"><img src="https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?q=80&w=800&auto=format&fit=crop" alt="Fighter jet over clouds" data-modal="img" /></div>
+          <div class="thumb"><img src="https://images.unsplash.com/photo-1496905583330-eb54c7e59158?q=80&w=800&auto=format&fit=crop" alt="Transport aircraft on runway" data-modal="img" /></div>
+          <div class="thumb"><img src="https://images.unsplash.com/photo-1531436107035-90a7e87975a6?q=80&w=800&auto=format&fit=crop" alt="Air wing formation" data-modal="img" /></div>
+          <div class="thumb"><img src="https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?q=80&w=800&auto=format&fit=crop" alt="Humanitarian air drop" data-modal="img" /></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" aria-labelledby="faq-title">
+      <div class="container">
+        <div class="section-head">
+          <h2 id="faq-title">Frequently Asked Questions</h2>
+          <p class="muted">General information for applicants and media.</p>
+        </div>
+        <div class="accordion grid" style="gap: 12px;">
+          <div class="item">
+            <button aria-expanded="false">
+              <strong>Is this an official government website?</strong>
+              <span class="chev" aria-hidden="true">⌃</span>
+            </button>
+            <div class="content" aria-hidden="true"><div>
+              <p class="muted">No. This is a demonstration frontend template. Replace text, images, and policies with official content before publishing.</p>
+            </div></div>
+          </div>
+          <div class="item">
+            <button aria-expanded="false">
+              <strong>How do I start a career application?</strong>
+              <span class="chev" aria-hidden="true">⌃</span>
+            </button>
+            <div class="content" aria-hidden="true"><div>
+              <p class="muted">Use the contact form below or integrate with your recruitment portal to collect applicant data securely.</p>
+            </div></div>
+          </div>
+          <div class="item">
+            <button aria-expanded="false">
+              <strong>Can I connect this site to a CMS?</strong>
+              <span class="chev" aria-hidden="true">⌃</span>
+            </button>
+            <div class="content" aria-hidden="true"><div>
+              <p class="muted">Yes. You can fetch news, events, and career listings from any REST/GraphQL API using the included JavaScript utilities.</p>
+            </div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" aria-labelledby="contact-title">
+      <div class="container">
+        <div class="section-head">
+          <h2 id="contact-title">Contact & Enquiries</h2>
+          <p class="muted">NIGERIA AIRFORCE BASE CONTACT US FOR MORE ENQUIRY AND WEBSITE BELONGS TOO UPTECH</p>
+        </div>
+        <div class="row-2">
+          <form id="contactForm" class="card" novalidate>
+            <div class="field">
+              <label for="name">Full Name</label>
+              <input id="name" name="name" placeholder="Jane Doe" required />
+            </div>
+            <div class="field">
+              <label for="email">Email</label>
+              <input id="email" name="email" type="email" inputmode="email" placeholder="name@example.com" required />
+            </div>
+            <div class="field">
+              <label for="topic">Topic</label>
+              <select id="topic" name="topic" required>
+                <option value="">Select…</option>
+                <option>Recruitment</option>
+                <option>Media</option>
+                <option>General</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="message">Message</label>
+              <textarea id="message" name="message" placeholder="How can we help?" required></textarea>
+              <div class="help">By submitting, you agree to our demo terms.</div>
+            </div>
+            <button class="cta" type="submit">Send Message</button>
+            <div id="formAlert" class="banner" hidden></div>
+          </form>
+
+          <aside class="card">
+            <h3>Headquarters</h3>
+            <p class="muted">Air Force Command HQ<br/> 1 Skyway Ave, Capital City</p>
+            <div class="spacer"></div>
+            <h3>Contact EMAIL</h3>
+            <p class="muted">Michealadebayo070@gmail.com<br/> +2347049557974 ON WHATSAPP AND 08156700102 calling NO </p>
+            <div class="spacer"></div>
+            <h3>Follow</h3>
+            <div class="socials">
+              <a href="#" aria-label="Twitter" title="Twitter">𝕏</a>
+              <a href="#" aria-label="Facebook" title="Facebook">f</a>
+              <a href="#" aria-label="Instagram" title="Instagram">IG</a>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer role="contentinfo">
+    <div class="container footer-grid">
+      <div class="muted">© <span id="year"></span> Air Force Command — Demo template. Not an official site.</div>
+      <div class="chips" style="justify-self:end;">
+        <span class="chip">Accessibility</span>
+        <span class="chip">Privacy</span>
+        <span class="chip">Terms</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Modal -->
+  <dialog id="imgModal" style="padding:0;border:none;border-radius:16px;max-width:90vw;">
+    <img id="modalImg" alt="Enlarged gallery image" />
+  </dialog>
+
+  <button id="toTop" aria-label="Back to top" title="Back to top"
+          style="position:fixed;right:16px;bottom:16px;border:none;border-radius:999px;padding:12px 14px;background:linear-gradient(135deg,var(--primary),var(--accent));color:#001225;font-weight:800;display:none;box-shadow:var(--shadow);">↑</button>
+
+  <script>
+    // Helper: select
+    const $ = (sel, el=document) => el.querySelector(sel);
+    const $$ = (sel, el=document) => Array.from(el.querySelectorAll(sel));
+
+    // Mobile nav toggle
+    const menuBtn = $('#menuBtn');
+    const navLinks = $('#navLinks');
+    menuBtn?.addEventListener('click', () => {
+      const open = navLinks.classList.toggle('open');
+      menuBtn.setAttribute('aria-expanded', String(open));
+    });
+
+    // Scroll spy for nav
+    const sections = ['home','capabilities','fleet','careers','news','gallery','faq','contact']
+      .map(id => document.getElementById(id));
+    const navA = $$('#navLinks a').filter(a => a.hash);
+
+    const spy = () => {
+      const y = window.scrollY + 100;
+      let current = sections[0].id;
+      for (const sec of sections) {
+        if (sec && y >= sec.offsetTop) current = sec.id;
+      }
+      navA.forEach(a => a.classList.toggle('active', a.hash === '#' + current));
+    }
+    document.addEventListener('scroll', spy, { passive: true });
+    window.addEventListener('load', spy);
+
+    // Animated stats counters (very simple, supports non-numeric too)
+    const counters = $$('.stat .num');
+    counters.forEach(el => {
+      const target = el.dataset.count;
+      if (!/^[0-9+kK/]+$/.test(target)) { el.textContent = target; return; }
+      let n = 0; const end = parseInt(target);
+      const step = Math.max(1, Math.round(end / 60));
+      const interval = setInterval(() => {
+        n += step; if (n >= end) { el.textContent = target; clearInterval(interval); } else { el.textContent = n; }
+      }, 16);
+    });
+
+    // FAQ accordion
+    $$('.accordion .item').forEach(item => {
+      const btn = $('button', item);
+      btn.addEventListener('click', () => {
+        const open = item.classList.toggle('open');
+        btn.setAttribute('aria-expanded', String(open));
+        const content = $('.content', item);
+        content.setAttribute('aria-hidden', String(!open));
+      });
+    });
+
+    // Gallery modal
+    const dialog = $('#imgModal');
+    const modalImg = $('#modalImg');
+    $$('#gallery [data-modal="img"]').forEach(img => {
+      img.addEventListener('click', () => {
+        modalImg.src = img.src.replace(/w=\d+/, 'w=1600');
+        dialog.showModal();
+      });
+    });
+    dialog?.addEventListener('click', (e) => {
+      const rect = dialog.getBoundingClientRect();
+      const inDialog = rect.top <= e.clientY && e.clientY <= rect.bottom && rect.left <= e.clientX && e.clientX <= rect.right;
+      if (!inDialog) dialog.close();
+    });
+
+    // Back to top
+    const toTop = $('#toTop');
+    document.addEventListener('scroll', () => {
+      toTop.style.display = window.scrollY > 500 ? 'inline-flex' : 'none';
+    }, { passive: true });
+    toTop.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+    // Contact form (demo only)
+    const form = $('#contactForm');
+    const alertBox = $('#formAlert');
+    form?.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const data = Object.fromEntries(new FormData(form).entries());
+      if (!data.name || !data.email || !data.topic || !data.message) {
+        alertBox.textContent = 'Please complete all fields.';
+        alertBox.className = 'banner error';
+        alertBox.hidden = false;
+        return;
+      }
+      // Demo: pretend to send
+      setTimeout(() => {
+        alertBox.textContent = 'Thank you! Your message has been queued (demo).';
+        alertBox.className = 'banner success';
+        alertBox.hidden = false;
+        form.reset();
+      }, 300);
+    });
+
+    // Footer year
+    $('#year').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
